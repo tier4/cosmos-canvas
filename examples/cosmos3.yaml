@@ -2,7 +2,7 @@
 # The renderer runs in its own environment (the cosmos-framework venv with carla-canvas, roadgen and the
 # cookbook's control renderers on top), without the run's PYTHONPATH / LD_LIBRARY_PATH.
 renderer:
-  backend: cosmos3_canvas:Cosmos3Renderer
+  backend: cosmos_canvas.sim_auto:Cosmos3Renderer
   endpoint: "localhost:50552"
   # Close the run's descriptors (the Traffic Manager socket among them) before exec.
   command: [env, -u, PYTHONPATH, -u, LD_LIBRARY_PATH, "PATH=/home/masaya-kataoka/.local/bin:/usr/bin:/bin",

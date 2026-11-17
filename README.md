@@ -4,7 +4,7 @@
 
 ```yaml
 renderer:
-  backend: cosmos3_canvas:Cosmos3Renderer
+  backend: cosmos_canvas.sim_auto:Cosmos3Renderer
   startup_timeout: 900
   timeout: 600
   options:
@@ -56,7 +56,7 @@ carla-canvas needs protobuf ≥ 7.35. In the framework's environment that breaks
 uv venv -p cosmos-framework/.venv/bin/python canvas-venv
 SP=canvas-venv/lib/python3.13/site-packages
 echo "import site; site.addsitedir('$PWD/cosmos-framework/.venv/lib/python3.13/site-packages')" > $SP/zz_cosmos_framework.pth
-printf '%s\n' $PWD/cosmos-framework/.agents/skills/cookbooks/cosmos3/simulation/auto/wsm $PWD/cosmos3-canvas > $SP/cosmos3_canvas_src.pth
+printf '%s\n' $PWD/cosmos-framework/.agents/skills/cookbooks/cosmos3/simulation/auto/wsm $PWD/cosmos-canvas > $SP/cosmos_canvas_src.pth
 uv pip install -p canvas-venv/bin/python carla-canvas==0.2.0 roadgen==0.37.1 'moderngl>=5.10' 'python-pycg>=0.7' mpire minio 'shapely>=2.1'
 uv pip install -p canvas-venv/bin/python --no-deps 'wandb>=0.31'
 # then remove from canvas-venv every package the framework's venv already has, except grpcio and protobuf
@@ -84,7 +84,7 @@ The cameras are the model's: the Hyperion 8 cameras, each through its own F-thet
 
 Any other camera is refused (`ValueError`, before anything is generated for it), as is a second CARLA camera for one Hyperion camera, and a `camera_map` naming a camera not in `cameras`. Its mount on the ego is free.
 
-`python -m cosmos3_canvas.camera <camera> [--resolution 480]` prints the camera as an [autoware_carla_scenario](https://github.com/autowarefoundation/autoware_carla_scenario) `driver.cameras` entry, with its F-theta `lens` (principal point, both polynomials and which one defines the lens, maximum angle and `linear_cde`, in the generated frames' pixels):
+`python -m cosmos_canvas.sim_auto.camera <camera> [--resolution 480]` prints the camera as an [autoware_carla_scenario](https://github.com/autowarefoundation/autoware_carla_scenario) `driver.cameras` entry, with its F-theta `lens` (principal point, both polynomials and which one defines the lens, maximum angle and `linear_cde`, in the generated frames' pixels):
 
 ```yaml
 - logical_id: "camera_front_wide_120fov"

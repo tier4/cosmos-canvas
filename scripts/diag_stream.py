@@ -22,7 +22,7 @@ def main() -> None:
     caption = json.loads(Path(view["caption_path"]).read_text())
     caption = next(iter(caption["caption_structured"].values()))["caption"]
 
-    from cosmos3_canvas.stream import Cosmos3Stream, chunk_camera_frames, chunk_lidar_sweeps
+    from cosmos_canvas.sim_auto.stream import Cosmos3Stream, chunk_camera_frames, chunk_lidar_sweeps
 
     stream = Cosmos3Stream(checkpoint, [view["camera_key"]], [caption], horizon_seconds=2.8, workdir=Path(out) / "work")
     model, pipe = stream.model, stream.pipe

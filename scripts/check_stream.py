@@ -14,7 +14,7 @@ from pathlib import Path
 import torch
 from safetensors.torch import load_file, save_file
 
-from cosmos3_canvas.stream import Cosmos3Stream, chunk_camera_frames, chunk_lidar_sweeps
+from cosmos_canvas.sim_auto.stream import Cosmos3Stream, chunk_camera_frames, chunk_lidar_sweeps
 
 
 def main() -> None:
