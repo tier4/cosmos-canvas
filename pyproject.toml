@@ -1,20 +1,25 @@
 [project]
 name = "cosmos-canvas"
-version = "0.1.0"
-description = "Cosmos3-Nano-Sim-Auto (cameras + LiDAR) as a carla_canvas renderer"
+version = "0.2.0"
+description = "Cosmos world models (OmniDreams, Cosmos3-Nano-Sim-Auto) as carla_canvas renderers"
 requires-python = ">=3.11"
 dependencies = ["carla-canvas>=0.2", "numpy", "scipy", "opencv-python-headless"]
 license = "Apache-2.0"
 readme = "README.md"
 
 [project.optional-dependencies]
-# cosmos_framework (the model) and cosmos_auto (the cookbook's control renderers) are installed
-# from a cosmos-framework checkout; roadgen exports the map.
+# Both backends export the map's OpenDRIVE with roadgen.
 map = ["roadgen>=0.37"]
+# The OmniDreams backend: FlashDreams (the model and its ludus raster) comes from the
+# environment it runs in; Pillow reads the first image.
+omnidreams = ["pillow"]
+# The Sim-Auto backend: cosmos_framework (the model) and cosmos_auto (the cookbook's control
+# renderers) are installed from a cosmos-framework checkout.
+test = ["pytest", "pillow", "pyyaml"]
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["cosmos_canvas", "cosmos_canvas.sim_auto", "cosmos3_canvas"]
+packages = ["cosmos_canvas", "cosmos_canvas.omnidreams", "cosmos_canvas.sim_auto", "cosmos3_canvas"]
