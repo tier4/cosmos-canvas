@@ -1,6 +1,6 @@
 """Print a Hyperion camera as cosmos3 generates it: an autoware_carla_scenario ``driver.cameras`` entry.
 
-    python -m cosmos3_canvas.camera camera_front_wide_120fov [--resolution 480] [--format yaml|json]
+    python -m cosmos_canvas.sim_auto.camera camera_front_wide_120fov [--resolution 480] [--format yaml|json]
 
 The entry is the generated image's size, the fov the camera is named for and its
 F-theta ``lens``: what a CARLA camera standing for the camera must say (the renderer

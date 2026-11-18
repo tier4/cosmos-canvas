@@ -25,14 +25,14 @@ one LiDAR (else a virtual one 1.94 m above the ego's origin).
 The cameras are the model's, not any camera: a CARLA camera must be its Hyperion
 camera's generated image exactly -- its size (832x480 at resolution 480) and the
 fov the camera is named for (120, 70 or 30) -- and is refused otherwise, as is a
-second CARLA camera for one Hyperion camera. ``python -m cosmos3_canvas.camera
+second CARLA camera for one Hyperion camera. ``python -m cosmos_canvas.sim_auto.camera
 <key>`` prints the camera as an autoware_carla_scenario ``driver.cameras`` entry,
 with its F-theta lens.
 
 Configuration (``renderer`` section of the carla_canvas file)::
 
     renderer:
-      backend: cosmos3_canvas:Cosmos3Renderer
+      backend: cosmos_canvas.sim_auto:Cosmos3Renderer
       startup_timeout: 600     # LoadWorld: the model loads
       timeout: 300             # a tick that generates a chunk
       options:
@@ -69,9 +69,9 @@ from carla_canvas.renderer import LidarView, RayHits
 from .controls import (HYPERION_CAMERAS, Box, LidarControl, WsmCamera, camera_pose_cv, default_ftheta,
                        lidar_control_frames)
 from .sensors import GENERATED_SIZE, GeneratedLens
-from .trajectory import Track
+from ..trajectory import Track
 
-log = logging.getLogger("cosmos3_canvas")
+log = logging.getLogger("cosmos_canvas.sim_auto")
 
 FRAME_SECONDS = 1.0 / 30
 SWEEP_SECONDS = 0.1
@@ -242,7 +242,7 @@ class Cosmos3Renderer(Renderer):
 
         if self._tmp is not None:
             self._tmp.cleanup()
-        self._tmp = tempfile.TemporaryDirectory(prefix="cosmos3_canvas_")
+        self._tmp = tempfile.TemporaryDirectory(prefix="cosmos_canvas_sim_auto_")
         path = Path(self._tmp.name) / "map.xodr"
         path.write_text(xodr)
         road_map = roadgen.read_opendrive(str(path), sampling=0.5)

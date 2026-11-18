@@ -112,7 +112,7 @@ class GeneratedLens:
                 f"{sensor} is {int(width)}x{int(height)} with fov {float(fov):g}, but cosmos3 draws "
                 f"{self.camera_key} as a {self.width}x{self.height} F-theta (fisheye) image only; set "
                 f"image_size_x={self.width}, image_size_y={self.height}, fov={self.fov:g} (and the lens: "
-                f"`python -m cosmos3_canvas.camera {self.camera_key}` prints the driver.cameras entry)")
+                f"`python -m cosmos_canvas.sim_auto.camera {self.camera_key}` prints the driver.cameras entry)")
 
     def as_driver_camera(self) -> dict:
         """The camera as an autoware_carla_scenario ``driver.cameras`` entry, lens included."""

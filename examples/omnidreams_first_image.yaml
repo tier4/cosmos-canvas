@@ -1,0 +1,17 @@
+# The WSM v4 control for NVIDIA's Cosmos3-Nano-Transfer-Auto, from which the OmniDreams backend's
+# first image is made (cosmos_canvas/omnidreams/first_image.py). Run it where the Sim-Auto backend
+# runs (cosmos-framework's cosmos_auto, a GPU for its renderer), in a scenario or through
+# scripts/replay_tracks.py; CARLA cameras get black while it records.
+renderer:
+  backend: cosmos_canvas.omnidreams.first_image:WsmCapture
+  startup_timeout: 600
+  timeout: 600           # the tick that draws the 93 control frames
+  options:
+    camera: /path/to/camera_front_wide_120fov.json   # the OmniDreams camera: its mount on the ego is used
+    out_dir: /path/to/first_image                    # wsm.mp4, captions/, request.jsonl, lens.json
+    caption: "A forward-facing dashcam view of an urban drive in clear daytime, on a dry road."
+    frames: 93                                       # 30 Hz control frames (1 + 4k)
+    map_extras: /path/to/Town10HD_Opt.extras.json    # optional: parked vehicles
+    seed: 0
+sensors:
+  - {type: sensor.camera.rgb, role_name: front}

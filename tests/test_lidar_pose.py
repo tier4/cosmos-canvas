@@ -9,7 +9,7 @@ import pytest
 
 carla_canvas = pytest.importorskip("carla_canvas")
 
-from cosmos3_canvas.renderer import _from_drawn_pose  # noqa: E402
+from cosmos_canvas.sim_auto.renderer import _from_drawn_pose  # noqa: E402
 
 
 def _pose(yaw_deg: float = 0.0, xyz: tuple[float, float, float] = (0.0, 0.0, 0.0)) -> np.ndarray:

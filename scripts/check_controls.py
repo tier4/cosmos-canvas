@@ -29,7 +29,7 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     import roadgen
 
-    from cosmos3_canvas.controls import Box, LidarControl, WsmCamera, camera_pose_cv
+    from cosmos_canvas.sim_auto.controls import Box, LidarControl, WsmCamera, camera_pose_cv
 
     t = time.perf_counter()
     road_map = roadgen.read_opendrive(str(xodr), sampling=0.5)

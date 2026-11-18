@@ -9,8 +9,8 @@ import numpy as np
 import pytest
 from numpy.polynomial import Polynomial
 
-from cosmos3_canvas.controls import WSM_SIZE
-from cosmos3_canvas.sensors import GeneratedLens
+from cosmos_canvas.sim_auto.controls import WSM_SIZE
+from cosmos_canvas.sim_auto.sensors import GeneratedLens
 
 #: An equidistant lens (radius = 400 px * angle) at 1277x720, as the cookbook's are rescaled.
 FTHETA = SimpleNamespace(
