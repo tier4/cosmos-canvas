@@ -19,7 +19,8 @@ of which the first frame is kept. Three steps, each in the environment it needs:
 3. ``python -m cosmos_canvas.omnidreams.first_image pick <generated.mp4> <out_dir>/lens.json
    <camera.json> <first_image.png>``: the generated video's first frame, turned from
    Transfer-Auto's lens (the Hyperion ``camera_front_wide_120fov``, 1280x720) into the
-   OmniDreams camera's, from the same point. Needs numpy and OpenCV only.
+   OmniDreams camera's, from the same point. Needs this package's own dependencies only
+   (no model, no GPU).
 
 Options (``renderer.options``)::
 

@@ -129,7 +129,8 @@ class Mp4:
 
     def close(self) -> None:
         self.p.stdin.close()
-        self.p.wait()
+        if self.p.wait():
+            raise RuntimeError("ffmpeg failed writing the camera video")
 
 
 def main() -> int:
@@ -160,9 +161,16 @@ def main() -> int:
     a.out.mkdir(parents=True, exist_ok=True)
     frame_hz = video_rate(renderer, fps)
     video = Mp4(a.out / "camera.mp4", w, h, frame_hz)
-    calls = replay(renderer, infos, samples, ego, fps, map_name=a.map_name, start=a.start, seconds=a.seconds,
-                   camera=a.camera, write=video.write, frame_hz=frame_hz)
-    video.close()
+    try:
+        calls = replay(renderer, infos, samples, ego, fps, map_name=a.map_name, start=a.start, seconds=a.seconds,
+                       camera=a.camera, write=video.write, frame_hz=frame_hz)
+    finally:
+        # as the carla_canvas service does at the end of a run: a renderer may finish its
+        # work there (WsmCapture writes the control of a run shorter than its frames)
+        try:
+            renderer.close()
+        finally:
+            video.close()
     if not calls:
         raise SystemExit(f"{a.tracks}: the ego has no sample near --start {a.start}; nothing was replayed")
     per_call = np.array([c["seconds"] for c in calls])

@@ -13,9 +13,10 @@ map = ["roadgen>=0.37"]
 # The OmniDreams backend: FlashDreams (the model and its ludus raster) comes from the
 # environment it runs in; Pillow reads the first image.
 omnidreams = ["pillow"]
-# The Sim-Auto backend: cosmos_framework (the model) and cosmos_auto (the cookbook's control
-# renderers) are installed from a cosmos-framework checkout.
-test = ["pytest", "pillow", "pyyaml"]
+# The Sim-Auto backend has no extra: cosmos_framework (the model) and cosmos_auto (the cookbook's
+# control renderers) are installed from a cosmos-framework checkout.
+# The tests: pyarrow writes and reads the ClipGT layers of the ludus raster's map.
+test = ["pytest", "pillow", "pyyaml", "pyarrow"]
 
 [build-system]
 requires = ["setuptools>=68"]

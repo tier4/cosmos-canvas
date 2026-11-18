@@ -361,3 +361,34 @@ def test_a_chunk_hands_over_every_road_user_in_range_in_any_of_its_frames(tmp_pa
                       3: (track(150.0, 150.0), np.array([4.6, 2.0, 1.5]), "car")}
     chunk = r.chunk(rollout, range(0, 8))
     assert [cls for cls, _, _ in chunk.boxes] == ["car"] and len(chunk.boxes[0][1]) == 8
+
+
+def test_a_camera_on_another_vehicle_does_not_restart_the_rollout(renderer):
+    """One camera is generated, for one vehicle: a camera on another vehicle gets black,
+    and the ego's rollout goes on (it used to restart on every call, each vehicle's in turn)."""
+    from carla_canvas import CameraView, WorldInfo
+    from carla_canvas.geometry import PinholeCamera
+    from carla_canvas.scene import ActorInfo, ActorState
+
+    renderer.load_world(WorldInfo("Carla/Maps/Town10HD_Opt", 1, {}, base_dir=renderer.test_dir,
+                                  opendrive="<OpenDRIVE/>"))
+    for k in range(8):
+        scene = _scene(0.1 * k, 20.0)
+        scene.add_actor(ActorInfo(4, "sensor.camera.rgb", parent_id=2))
+        scene.states[4] = ActorState(scene.states[2].transform)
+        assert renderer.render_camera(_view(scene, renderer)).rgb.any()
+        other = CameraView(camera=PinholeCamera(512, 256, 62.0, scene.states[4].transform), scene=scene,
+                           outputs=frozenset({"rgb"}), sensor_id=4, frame=renderer.coordinate_frame)
+        assert not renderer.render_camera(other).rgb.any()
+    assert renderer._stream.started == 1
+    assert renderer._rollout.ego_id == 1
+
+    # the ego is gone and the other vehicle carries the only camera: the rollout is its own
+    scene = _scene(0.8, 20.0)
+    scene.add_actor(ActorInfo(4, "sensor.camera.rgb", parent_id=2))
+    scene.states[4] = ActorState(scene.states[2].transform)
+    del scene.states[1]
+    other = CameraView(camera=PinholeCamera(512, 256, 62.0, scene.states[4].transform), scene=scene,
+                       outputs=frozenset({"rgb"}), sensor_id=4, frame=renderer.coordinate_frame)
+    renderer.render_camera(other)
+    assert renderer._rollout.ego_id == 2 and renderer._stream.started == 2

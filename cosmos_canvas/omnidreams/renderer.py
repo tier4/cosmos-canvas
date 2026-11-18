@@ -117,6 +117,7 @@ class OmniDreamsRenderer(Renderer):
         self._map_key: str | None = None
         self._stream = None
         self._rollout: _Rollout | None = None
+        self._refused: set[int] = set()   # cameras on another vehicle, warned about once
         self._record: Path | None = None
         self._lock = threading.RLock()
         self.timings: list[dict[str, float]] = []
@@ -126,6 +127,7 @@ class OmniDreamsRenderer(Renderer):
     def load_world(self, world: WorldInfo) -> None:
         with self._lock:
             self._rollout = None
+            self._refused.clear()
             o = self.options
             self.reproject = bool(o.get("reproject", True))
             camera_path = world.resolve(o["camera"])
@@ -213,9 +215,17 @@ class OmniDreamsRenderer(Renderer):
             return None
         rollout = self._rollout
         if rollout is not None and (t < rollout.last_time - 1e-6 or t - rollout.last_time > self.reset_gap
-                                    or ego_id != rollout.ego_id):
-            log.info("time jumped %.3f -> %.3f s (or a new ego): new rollout", rollout.last_time, t)
+                                    or rollout.ego_id not in scene.states):
+            log.info("time jumped %.3f -> %.3f s (or the ego is gone): new rollout", rollout.last_time, t)
             rollout = None
+        if rollout is not None and ego_id != rollout.ego_id:
+            # one camera is generated, for one vehicle: a camera on another one would
+            # otherwise restart the rollout on every call, each vehicle's in turn
+            if sensor_id not in self._refused:
+                self._refused.add(sensor_id)
+                log.warning("camera %d is on vehicle %d; the rollout is vehicle %d's: nothing is generated "
+                            "for it", sensor_id, ego_id, rollout.ego_id)
+            return None
         if rollout is None:
             ego = scene.actors[ego_id]
             rollout = self._rollout = _Rollout(t0=t, last_time=t, ego_id=ego_id,
